@@ -48,6 +48,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     _picshow = new PicShow();
     ui->picLayout->addWidget(_picshow);
+    auto * pro_pic_show = dynamic_cast<PicShow*>(_picshow);
+    connect(pro_tree_widget, &ProTreeWidget::SigUpdateSelected,pro_pic_show, &PicShow::SlotSelectItem);
 }
 
 MainWindow::~MainWindow()

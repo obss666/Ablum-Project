@@ -23,6 +23,7 @@ ProTreeWidget::ProTreeWidget(QWidget *parent): QTreeWidget(parent), _right_btn_i
     connect(_action_import, &QAction::triggered, this, &ProTreeWidget::SlotImport);
     connect(_action_setstart, &QAction::triggered, this, &ProTreeWidget::SlotSetActive);
     connect(_action_closepro, &QAction::triggered, this, &ProTreeWidget::SlotClosePro);
+    connect(this, &ProTreeWidget::itemDoubleClicked, this, &ProTreeWidget::SlotDoubleClickItem);
 }
 
 void ProTreeWidget::AddProToTree(const QString &name, const QString &path)
@@ -54,20 +55,36 @@ void ProTreeWidget::AddProToTree(const QString &name, const QString &path)
     this->addTopLevelItem(item);
 }
 
-void ProTreeWidget::SlotItemPressed(QTreeWidgetItem *pressedItem, int column)
+void ProTreeWidget::SlotItemPressed(QTreeWidgetItem *item, int column)
 {
     if(QGuiApplication::mouseButtons() == Qt::RightButton)   //判断是否为右键
     {
         QMenu menu(this);
-        int itemtype = (int)(pressedItem->type());
+        int itemtype = (int)(item->type());
         if (itemtype == TreeItemPro)
         {
-            _right_btn_item = pressedItem;
+            _right_btn_item = item;
             menu.addAction(_action_import);
             menu.addAction(_action_closepro);
             menu.addAction(_action_setstart);
             menu.addAction(_action_slidshow);
             menu.exec(QCursor::pos());   //菜单弹出位置为鼠标点击位置
+        }
+    }
+}
+
+void ProTreeWidget::SlotDoubleClickItem(QTreeWidgetItem *doubleItem, int column)
+{
+    if(QGuiApplication::mouseButtons() == Qt::LeftButton)   //判断是否为左键
+    {
+        auto * tree_doubleItem = dynamic_cast<ProTreeItem*>(doubleItem);
+        if(!tree_doubleItem){
+            return;
+        }
+        int itemtype = (int)(tree_doubleItem->type());
+        if(itemtype == TreeItemPic){
+            emit SigUpdateSelected(tree_doubleItem->GetPath());
+            _selected_item = doubleItem;
         }
     }
 }
