@@ -181,7 +181,7 @@
   <customwidget>
    <class>PicButton</class>
    <extends>QPushButton</extends>
-   <header>picbutton.h</header>
+   <header location="global">picbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

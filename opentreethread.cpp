@@ -26,7 +26,6 @@ void OpenTreeThread::run()
     //读取根节点下目录和文件
     RecursiveProTree(_src_path, _file_count, _self, _root, item, nullptr);
 
-
     if(_bstop){
         auto path = dynamic_cast<ProTreeItem*>(_root)->GetPath();
         auto index = _self->indexOfTopLevelItem(_root);

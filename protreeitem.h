@@ -16,8 +16,8 @@ public:
     void SetNextItem(QTreeWidgetItem *item);
     ProTreeItem* GetPreItem();
     ProTreeItem* GetNextItem();
-    ProTreeItem* GetLastPicChild();
-    ProTreeItem* GetFirstPicChild();
+    ProTreeItem *GetLastPicChild();
+    ProTreeItem *GetFirstPicChild();
 
 private:
     QString _path;

@@ -9,6 +9,7 @@
 #include "protreethread.h"
 #include "removeprodialog.h"
 #include "opentreethread.h"
+#include "slideshowdlg.h"
 
 ProTreeWidget::ProTreeWidget(QWidget *parent): QTreeWidget(parent), _right_btn_item(nullptr), _active_item(nullptr),
     _selected_item(nullptr), _dialog_progress(nullptr), _open_progressdlg(nullptr), _thread_create_pro(nullptr), _thread_open_pro(nullptr) {
@@ -23,7 +24,10 @@ ProTreeWidget::ProTreeWidget(QWidget *parent): QTreeWidget(parent), _right_btn_i
     connect(_action_import, &QAction::triggered, this, &ProTreeWidget::SlotImport);
     connect(_action_setstart, &QAction::triggered, this, &ProTreeWidget::SlotSetActive);
     connect(_action_closepro, &QAction::triggered, this, &ProTreeWidget::SlotClosePro);
+
     connect(this, &ProTreeWidget::itemDoubleClicked, this, &ProTreeWidget::SlotDoubleClickItem);
+
+    connect(_action_slidshow, &QAction::triggered, this, &ProTreeWidget::SlotSlideShow);
 }
 
 void ProTreeWidget::AddProToTree(const QString &name, const QString &path)
@@ -221,6 +225,32 @@ void ProTreeWidget::SlotCancelOpenProgress()
 {
     emit SigCancelOpenProgress();
     _open_progressdlg->deleteLater();
+}
+
+void ProTreeWidget::SlotSlideShow()
+{
+    if(!_right_btn_item) {
+        return;
+    }
+
+    auto *right_pro_item = dynamic_cast<ProTreeItem*>(_right_btn_item);
+    auto * last_child_item = right_pro_item->GetLastPicChild();
+    if(!last_child_item){
+        return;
+    }
+
+    // qDebug()<< "last child item name is " << last_child_item->GetPath()<< endl;
+
+    auto * first_child_item = right_pro_item->GetFirstPicChild();
+    if(!first_child_item){
+        return;
+    }
+
+    // qDebug()<< "first child item name is " << first_child_item->GetPath()<< endl;
+
+    _slide_show_dlg = std::make_shared<SlideShowDlg>(this, first_child_item, last_child_item);
+    _slide_show_dlg->setModal(true);
+    _slide_show_dlg->showMaximized();
 }
 
 void ProTreeWidget::SlotOpenPro(const QString& path)
