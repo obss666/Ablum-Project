@@ -12,22 +12,23 @@
 #include "slideshowdlg.h"
 
 ProTreeWidget::ProTreeWidget(QWidget *parent): QTreeWidget(parent), _right_btn_item(nullptr), _active_item(nullptr),
-    _selected_item(nullptr), _dialog_progress(nullptr), _open_progressdlg(nullptr), _thread_create_pro(nullptr), _thread_open_pro(nullptr) {
+    _selected_item(nullptr), _dialog_progress(nullptr), _open_progressdlg(nullptr),
+    _thread_create_pro(nullptr), _thread_open_pro(nullptr), _slide_show_dlg(nullptr)
+{
     this->header()->hide();
-    connect(this, &ProTreeWidget::itemPressed, this, &ProTreeWidget::SlotItemPressed);
 
     _action_import = new QAction(QIcon(":/icon/import.png"),tr("导入文件"), this);
     _action_setstart = new QAction(QIcon(":/icon/core.png"),tr("设置活动项目"), this);
     _action_closepro = new QAction(QIcon(":/icon/close.png"),tr("关闭项目"), this);
     _action_slidshow = new QAction(QIcon(":/icon/slideshow.png"),tr("轮播图播放"), this);
 
+    connect(this, &ProTreeWidget::itemPressed, this, &ProTreeWidget::SlotItemPressed); //右键点击触发菜单
     connect(_action_import, &QAction::triggered, this, &ProTreeWidget::SlotImport);
     connect(_action_setstart, &QAction::triggered, this, &ProTreeWidget::SlotSetActive);
     connect(_action_closepro, &QAction::triggered, this, &ProTreeWidget::SlotClosePro);
-
-    connect(this, &ProTreeWidget::itemDoubleClicked, this, &ProTreeWidget::SlotDoubleClickItem);
-
     connect(_action_slidshow, &QAction::triggered, this, &ProTreeWidget::SlotSlideShow);
+
+    connect(this, &ProTreeWidget::itemDoubleClicked, this, &ProTreeWidget::SlotDoubleClickItem); //当前的根目录中的item被双击
 }
 
 void ProTreeWidget::AddProToTree(const QString &name, const QString &path)
@@ -65,9 +66,9 @@ void ProTreeWidget::SlotItemPressed(QTreeWidgetItem *item, int column)
     {
         QMenu menu(this);
         int itemtype = (int)(item->type());
-        if (itemtype == TreeItemPro)
+        if (itemtype == TreeItemPro) //如果是根目录
         {
-            _right_btn_item = item;
+            _right_btn_item = item;  //标记该项目被右键选中
             menu.addAction(_action_import);
             menu.addAction(_action_closepro);
             menu.addAction(_action_setstart);
@@ -88,14 +89,14 @@ void ProTreeWidget::SlotDoubleClickItem(QTreeWidgetItem *doubleItem, int column)
         int itemtype = (int)(tree_doubleItem->type());
         if(itemtype == TreeItemPic){
             emit SigUpdateSelected(tree_doubleItem->GetPath());
-            _selected_item = doubleItem;
+            _selected_item = doubleItem;  //更新双击选中item
         }
     }
 }
 
 void ProTreeWidget::SlotImport() // 导入
 {
-    QFileDialog file_dialog;
+    QFileDialog file_dialog; //文件对话框
     file_dialog.setFileMode(QFileDialog::Directory);
     file_dialog.setWindowTitle(tr("选择导入的文件夹"));
     QString path = "";
@@ -104,9 +105,10 @@ void ProTreeWidget::SlotImport() // 导入
         return ;
     }
 
-    path = dynamic_cast<ProTreeItem*>(_right_btn_item)->GetPath();
+    path = dynamic_cast<ProTreeItem*>(_right_btn_item)->GetPath(); //当前图片path
     file_dialog.setDirectory(path);
     file_dialog.setViewMode(QFileDialog::Detail);
+
     QStringList fileNames;
     if (file_dialog.exec()){
         fileNames = file_dialog.selectedFiles(); // 获取选中文件
@@ -118,6 +120,7 @@ void ProTreeWidget::SlotImport() // 导入
     int file_count = 0;
 
 
+    //导入文件线程？
     _thread_create_pro = std::make_shared<ProTreeThread>(std::ref(import_path), std::ref(path), _right_btn_item,
                                                          file_count, this, _right_btn_item, nullptr);
 
@@ -306,3 +309,4 @@ void ProTreeWidget::SlotPreShow()
     _selected_item = curItem;
     this->setCurrentItem(curItem);
 }
+

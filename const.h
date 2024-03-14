@@ -2,9 +2,9 @@
 #define CONST_H
 
 enum TreeItemType{
-    TreeItemPro = 1,
-    TreeItemDir = 2,
-    TreeItemPic = 3,
+    TreeItemPro = 1, //项目 根目录
+    TreeItemDir = 2, //文件夹
+    TreeItemPic = 3, //图片
 };
 
 enum PicBtnState{
@@ -19,4 +19,6 @@ enum PicBtnState{
 
 const int PROGRESS_WIDTH = 300;
 const int PROGRESS_MAX = 300;             // 最大进度条
+const int PREITEM_SIZE = 100;
+const int PREICON_SIZE = 90;
 #endif // CONST_H

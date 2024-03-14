@@ -5,6 +5,7 @@
 
 class PicStateBtn : public QPushButton
 {
+    Q_OBJECT
 public:
     PicStateBtn(QWidget *parent = nullptr);
     void SetIcons(const QString &normal, const QString &hover, const QString &pressed,
@@ -29,6 +30,10 @@ private:
     void setNormal2Icon();
     void setHover2Icon();
     void setPress2Icon();
+
+public slots:
+    void SlotStart();
+    void SlotStop();
 };
 
 #endif // PICSTATEBTN_H

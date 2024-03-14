@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setMinimumSize(1400, 800);
     ui->setupUi(this);
     //创建项目菜单
-    QMenu *menu_file = menuBar()->addMenu(tr("文件(&F)"));
+    QMenu *menu_file = menuBar()->addMenu(tr("文件(&F)")); //添加到菜单栏
     //创建项目动作
     QAction *act_create_pro = new QAction(QIcon(":/icon/createpro.png"), tr("创建项目"), this);
     act_create_pro->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_N));
@@ -27,8 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     menu_file->addAction(act_open_pro);
 
     //创建设置菜单
-    QMenu *menu_set = menuBar()->addMenu(tr("设置(&S)"));
-    //设置背景音乐--------------------------
+    QMenu *menu_set = menuBar()->addMenu(tr("设置(&S)"));  //添加到菜单栏
+    //设置背景音乐
     QAction *act_music = new QAction(QIcon(":/icon/music.png"), tr("背景音乐"),this);
     act_music->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_M));
     menu_set->addAction(act_music);
@@ -37,7 +37,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(act_create_pro, &QAction::triggered, this, &MainWindow::SlotCreatePro);
     //连接打开项目的槽函数
     connect(act_open_pro, &QAction::triggered, this, &MainWindow::SlotOpenPro);
-
 
     _protree = new ProTree(); // dialog
     ui->proLayout->addWidget(_protree);
@@ -71,10 +70,11 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 void MainWindow::SlotCreatePro(bool)
 {
     // qDebug() << "slot create pro triggered" << Qt::endl;
-    Wizard wizard(this);
+    Wizard wizard(this);  // 向导
     wizard.setWindowTitle(tr("创建项目"));
     auto *page = wizard.page(0);
     page->setTitle(tr("设置项目配置"));
+
     //连接槽函数，把项目配置传回来
     connect(&wizard, &Wizard::SigProSettings, dynamic_cast<ProTree*>(_protree), &ProTree::AddProToTree);
     wizard.show();

@@ -88,7 +88,7 @@ void OpenTreeThread::RecursiveProTree(const QString &src_path, int &file_count, 
             preitem = item;
         }
     }
-    parent_item->setExpanded(true);
+    // parent_item->setExpanded(true);
     emit SigFinishProgress(file_count);
 }
 

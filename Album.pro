@@ -17,6 +17,8 @@ SOURCES += \
     picbutton.cpp \
     picshow.cpp \
     picstatebtn.cpp \
+    prelistitem.cpp \
+    prelistwid.cpp \
     prosetpage.cpp \
     protree.cpp \
     protreeitem.cpp \
@@ -35,6 +37,8 @@ HEADERS += \
     picbutton.h \
     picshow.h \
     picstatebtn.h \
+    prelistitem.h \
+    prelistwid.h \
     prosetpage.h \
     protree.h \
     protreeitem.h \

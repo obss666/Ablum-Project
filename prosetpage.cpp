@@ -9,10 +9,10 @@ ProSetPage::ProSetPage(QWidget *parent)
     , ui(new Ui::ProSetPage)
 {
     ui->setupUi(this);
-    registerField("proPath", ui->lineEdit_2);
+    registerField("proPath", ui->lineEdit_2); //将文本框字段与lineEdit关联
     registerField("proName*", ui->lineEdit);
 
-    connect(ui->lineEdit, &QLineEdit::textEdited, this, &ProSetPage::completeChanged);
+    connect(ui->lineEdit, &QLineEdit::textEdited, this, &ProSetPage::completeChanged);  // 编辑时判断是否有效
     connect(ui->lineEdit_2, &QLineEdit::textEdited, this, &ProSetPage::completeChanged);
 
     QString curPath = QDir::currentPath(); // 获取当前应用程序的工作目录。

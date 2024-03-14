@@ -113,7 +113,7 @@ void ProTreeThread::CreateProTree(const QString &src_path, const QString &dist_p
             preItem = item;
         }
     }
-    parent_item->setExpanded(true);
+    // parent_item->setExpanded(true);
 }
 
 void ProTreeThread::SlotCancelProgress()

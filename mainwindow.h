@@ -23,8 +23,8 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-    QWidget *_protree;
-    QWidget *_picshow;
+    QWidget *_protree;  //左边目录树
+    QWidget *_picshow;  //右边图片显示
 
 private slots:
     void SlotCreatePro(bool); // 创建项目槽函数

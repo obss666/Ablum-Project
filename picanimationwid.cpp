@@ -20,34 +20,30 @@ void PicAnimationWid::SetPixmap(QTreeWidgetItem *item)
     if(!item){
         return;
     }
-
     auto * tree_item = dynamic_cast<ProTreeItem*>(item);
     auto path = tree_item->GetPath();
     _pixmap1.load(path);
     _cur_item = tree_item;
     if(_map_items.find(path) == _map_items.end()){
         _map_items[path]=tree_item;
-        // qDebug() << "SetPixmap path is " << path << Qt::endl;
-        // emit SigUpPreList(item);
+        emit SigUpPreList(item);
     }
-
-    // emit SigSelectItem(item);
-
+    emit SigSelectItem(item);
     auto * next_item = tree_item->GetNextItem();
     if(!next_item){
         return;
     }
-
     auto next_path = next_item->GetPath();
     _pixmap2.load(next_path);
     if(_map_items.find(next_path) == _map_items.end()){
         _map_items[next_path] = next_item;
-        // emit SigUpPreList(next_item);
+        emit SigUpPreList(next_item);
     }
 }
 
 void PicAnimationWid::Start()
 {
+    emit SigStart();
     _factor = 0;
     _timer->start(25);
     _b_start = true;
@@ -55,9 +51,40 @@ void PicAnimationWid::Start()
 
 void PicAnimationWid::Stop()
 {
+    emit SigStop();
     _timer->stop();
     _factor = 0;
     _b_start = false;
+}
+
+void PicAnimationWid::SlideNext()
+{
+    Stop();
+    if(!_cur_item) {
+        return;
+    }
+    auto *cur_pro_item = dynamic_cast<ProTreeItem*>(_cur_item);
+    auto *next_item = cur_pro_item->GetNextItem();
+    if(!next_item) {
+        return;
+    }
+    SetPixmap(next_item);
+    update();
+}
+
+void PicAnimationWid::SlidePre()
+{
+    Stop();
+    if(!_cur_item) {
+        return;
+    }
+    auto *cur_pro_item = dynamic_cast<ProTreeItem*>(_cur_item);
+    auto *pre_item = cur_pro_item->GetPreItem();
+    if(!pre_item) {
+        return;
+    }
+    SetPixmap(pre_item);
+    update();
 }
 
 void PicAnimationWid::paintEvent(QPaintEvent *event)
@@ -107,6 +134,56 @@ void PicAnimationWid::paintEvent(QPaintEvent *event)
     x = (w - _pixmap2.width()) / 2;
     y = (h - _pixmap2.height()) / 2;
     painter.drawPixmap(x, y, alphaPixmap2);
+}
+
+void PicAnimationWid::UpSelectPixmap(QTreeWidgetItem *item)
+{
+    if(!item){
+        return;
+    }
+    auto * tree_item = dynamic_cast<ProTreeItem*>(item);
+    auto path = tree_item->GetPath();
+    _pixmap1.load(path);
+    _cur_item = tree_item;
+    if(_map_items.find(path) == _map_items.end()){
+        _map_items[path]=tree_item;
+        qDebug() << "SetPixmap path is " << path << Qt::endl;
+    }
+    auto * next_item = tree_item->GetNextItem();
+    if(!next_item){
+        return;
+    }
+    auto next_path = next_item->GetPath();
+    _pixmap2.load(next_path);
+    if(_map_items.find(next_path) == _map_items.end()){
+        _map_items[next_path] = next_item;
+    }
+}
+
+void PicAnimationWid::SlotUpSelectShow(QString &path)
+{
+    // qDebug()<<"SlotUpSelectShow path is " << path << endl;
+    auto iter = _map_items.find(path);
+    if(iter == _map_items.end()){
+        return;
+    }
+    UpSelectPixmap(iter.value());
+    update();
+}
+
+void PicAnimationWid::SlotStartOrStop()
+{
+    if(!_b_start) {
+        _factor = 0;
+        _timer->start(25);
+        _b_start = true;
+        // emit SigStartMusic();
+    } else {
+        _timer->stop();
+        _factor = 0;
+        update();
+        _b_start = false;
+    }
 }
 
 void PicAnimationWid::TimeOut()
