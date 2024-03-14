@@ -6,8 +6,8 @@ ProTree::ProTree(QWidget *parent)
     , ui(new Ui::ProTree)
 {
     ui->setupUi(this);
-    // this->setMinimumHeight(378);
-    // this->setMaximumHeight(378);
+    this->setMinimumWidth(386);
+
 }
 
 ProTree::~ProTree()

@@ -30,6 +30,8 @@ private:
 
 public slots:
     void SlotOpenPro(const QString &path);
+    void SlotNextShow();
+    void SlotPreShow();
 
 private slots:
     void SlotItemPressed(QTreeWidgetItem *item, int column);
@@ -49,6 +51,8 @@ signals:
     void SigCancelProgress();
     void SigCancelOpenProgress();
     void SigUpdateSelected(const QString &);
+    void SigUpdatePic(const QString &);
+    void SigClearSelected();
 };
 
 #endif // PROTREEWIDGET_H
