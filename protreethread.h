@@ -18,7 +18,7 @@ protected:
 
 private:
     void CreateProTree(const QString &src_path, const QString &dist_path, QTreeWidgetItem *parent_item,
-                       int &file_count, QTreeWidget *self, QTreeWidgetItem *root, QTreeWidgetItem *preItem = nullptr);
+                       int &file_count, QTreeWidget *self, QTreeWidgetItem *preItem = nullptr);
 
     QString _src_path;   // 源地址
     QString _dist_path;  // 目的地址

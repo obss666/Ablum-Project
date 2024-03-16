@@ -115,6 +115,8 @@ void PicShow::SlotUpdatePic(const QString &path)
 
 void PicShow::SlotDeleteItem()
 {
-    _selected_path = "";
-
+    if(_selected_path != "") {
+        _selected_path = "";
+        ui->label->clear();
+    }
 }

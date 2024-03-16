@@ -17,7 +17,7 @@ protected:
 
 private:
     void RecursiveProTree(const QString &src_path, int &file_count, QTreeWidget *self,
-                          QTreeWidgetItem *root, QTreeWidgetItem *parent_item, QTreeWidgetItem *preitem);
+                            QTreeWidgetItem *parent_item, QTreeWidgetItem *preitem);
     QString _src_path;
     int _file_count;
     QTreeWidget *_self;

@@ -168,7 +168,8 @@ void ProTreeWidget::SlotSetActive()
 void ProTreeWidget::SlotClosePro()
 {
     RemoveProDialog remove_pro_dialog;
-    remove_pro_dialog.exec();
+    if(remove_pro_dialog.exec() != QDialog::Accepted) return;
+
     bool b_remove = remove_pro_dialog.IsRemoved();
     auto index_right_btn = this->indexOfTopLevelItem(_right_btn_item);
     auto *protreeitem = dynamic_cast<ProTreeItem*>(_right_btn_item);

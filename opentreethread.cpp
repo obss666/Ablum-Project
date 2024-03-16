@@ -2,7 +2,6 @@
 #include <Qdir>
 #include <QDebug>
 #include "protreeitem.h"
-#include "databasemanager.h"
 #include "const.h"
 
 OpenTreeThread::OpenTreeThread(const QString &src_path, int &file_count, QTreeWidget *self, QObject *parent) :
@@ -27,8 +26,7 @@ void OpenTreeThread::run()
     item->setData(0,Qt::ToolTipRole, _src_path);
     _root = item;
     //读取根节点下目录和文件
-    RecursiveProTree(_src_path, _file_count, _self, _root, item, nullptr);
-
+    RecursiveProTree(_src_path, _file_count, _self, item, nullptr);
 
     if(_bstop){
         auto path = dynamic_cast<ProTreeItem*>(_root)->GetPath();
@@ -42,7 +40,7 @@ void OpenTreeThread::run()
 }
 
 void OpenTreeThread::RecursiveProTree(const QString &src_path, int &file_count, QTreeWidget *self,
-                                      QTreeWidgetItem *root, QTreeWidgetItem *parent_item, QTreeWidgetItem *preitem)
+                                      QTreeWidgetItem *parent_item, QTreeWidgetItem *preitem)
 {
     QDir src_dir(src_path); //设置文件过滤器
     src_dir.setFilter(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);//除了目录或文件，其他的过滤掉
@@ -65,11 +63,11 @@ void OpenTreeThread::RecursiveProTree(const QString &src_path, int &file_count, 
         }
         file_count++;
         emit SigUpdateProgress(file_count);
-        auto * item = new ProTreeItem(parent_item, fileInfo.fileName(), fileInfo.absoluteFilePath(), root, TreeItemDir);
+        auto * item = new ProTreeItem(parent_item, fileInfo.fileName(), fileInfo.absoluteFilePath(), _root, TreeItemDir);
         item->setData(0,Qt::DisplayRole, fileInfo.fileName());
         item->setData(0,Qt::DecorationRole, QIcon(":/icon/dir.png"));
         item->setData(0,Qt::ToolTipRole, fileInfo.absoluteFilePath());
-        RecursiveProTree(fileInfo.absoluteFilePath(), file_count, self, root, item, nullptr);
+        RecursiveProTree(fileInfo.absoluteFilePath(), file_count, self, item, nullptr);
     }
     // 处理文件
     for (const auto &fileInfo : fileList) {
@@ -82,7 +80,7 @@ void OpenTreeThread::RecursiveProTree(const QString &src_path, int &file_count, 
         }
         file_count++;
         emit SigUpdateProgress(file_count);
-        auto * item = new ProTreeItem(parent_item, fileInfo.fileName(), fileInfo.absoluteFilePath(), root, TreeItemPic);
+        auto * item = new ProTreeItem(parent_item, fileInfo.fileName(), fileInfo.absoluteFilePath(), _root, TreeItemPic);
         item->setData(0,Qt::DisplayRole, fileInfo.fileName());
         item->setData(0,Qt::DecorationRole, QIcon(":/icon/pic.png"));
         item->setData(0,Qt::ToolTipRole, fileInfo.absoluteFilePath());

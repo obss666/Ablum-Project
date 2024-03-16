@@ -31,7 +31,7 @@ void ProTreeThread::run()
 }
 
 void ProTreeThread::CreateProTree(const QString &src_path, const QString &dist_path, QTreeWidgetItem *parent_item,
-                                  int &file_count, QTreeWidget *self, QTreeWidgetItem *root, QTreeWidgetItem* preItem)
+                                  int &file_count, QTreeWidget *self, QTreeWidgetItem* preItem)
 {
     if(_bstop){
         return;
@@ -70,11 +70,11 @@ void ProTreeThread::CreateProTree(const QString &src_path, const QString &dist_p
                 continue;
             }
         }
-        auto * item = new ProTreeItem(parent_item, fileInfo.fileName(), sub_dist_path, root, TreeItemDir);
+        auto * item = new ProTreeItem(parent_item, fileInfo.fileName(), sub_dist_path, _root, TreeItemDir);
         item->setData(0,Qt::DisplayRole, fileInfo.fileName());
         item->setData(0,Qt::DecorationRole, QIcon(":/icon/dir.png"));
         item->setData(0,Qt::ToolTipRole, sub_dist_path);
-        CreateProTree(fileInfo.absoluteFilePath(), sub_dist_path, item, file_count, self, root, nullptr);
+        CreateProTree(fileInfo.absoluteFilePath(), sub_dist_path, item, file_count, self, nullptr);
     }
     // 处理文件
     for (const auto &fileInfo : fileList) {
@@ -95,7 +95,7 @@ void ProTreeThread::CreateProTree(const QString &src_path, const QString &dist_p
         if(!QFile::copy(fileInfo.absoluteFilePath(), dist_file_path)) {
             continue;
         }
-        auto * item = new ProTreeItem(parent_item, fileInfo.fileName(), dist_file_path, root, TreeItemPic);
+        auto * item = new ProTreeItem(parent_item, fileInfo.fileName(), dist_file_path, _root, TreeItemPic);
         item->setData(0,Qt::DisplayRole, fileInfo.fileName());
         item->setData(0,Qt::DecorationRole, QIcon(":/icon/pic.png"));
         item->setData(0,Qt::ToolTipRole, dist_file_path);
