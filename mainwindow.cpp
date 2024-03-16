@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include "protreewidget.h"
 #include "picshow.h"
+#include "databasemanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -42,8 +43,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->proLayout->addWidget(_protree);
     QTreeWidget *tree_widget = dynamic_cast<ProTree*>(_protree)->GetTreeWidget();
     auto *pro_tree_widget = dynamic_cast<ProTreeWidget*>(tree_widget);
+
     //连接打开项目的槽函数
     connect(this, &MainWindow::SigOpenPro, pro_tree_widget, &ProTreeWidget::SlotOpenPro);
+
 
     _picshow = new PicShow(); // dialog
     ui->picLayout->addWidget(_picshow);
@@ -53,6 +56,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(pro_pic_show, &PicShow::SigNextClicked, pro_tree_widget, &ProTreeWidget::SlotNextShow);
     connect(pro_tree_widget, &ProTreeWidget::SigUpdatePic, pro_pic_show, &PicShow::SlotUpdatePic);
     connect(pro_tree_widget, &ProTreeWidget::SigClearSelected, pro_pic_show, &PicShow::SlotDeleteItem);
+
+    DatabaseManager::initDatabase();
+    auto last_open_pros = DatabaseManager::getAllFile();
+    if(!last_open_pros.empty()) {
+        QDir dir(last_open_pros.back());
+        if (dir.exists() && dir.isReadable()) {
+            pro_tree_widget->OpenPro(last_open_pros.back());
+        }
+    }
 }
 
 MainWindow::~MainWindow()

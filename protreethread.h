@@ -20,13 +20,13 @@ private:
     void CreateProTree(const QString &src_path, const QString &dist_path, QTreeWidgetItem *parent_item,
                        int &file_count, QTreeWidget *self, QTreeWidgetItem *root, QTreeWidgetItem *preItem = nullptr);
 
-    QString _src_path;
-    QString _dist_path;
-    int _file_count;
+    QString _src_path;   // 源地址
+    QString _dist_path;  // 目的地址
+    int _file_count;     // 文件数量
     QTreeWidgetItem *_parent_item;
     QTreeWidget *_self;
     QTreeWidgetItem *_root;
-    bool _bstop;
+    bool _bstop; //是否停止
 
 public slots:
     void SlotCancelProgress();

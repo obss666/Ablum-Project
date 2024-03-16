@@ -19,7 +19,7 @@ void Wizard::done(int result)
         return QWizard::done(result);
     }
     QString name, path;
-    ui->wizardPage1->GetProSettings(name, path);
+    ui->wizardPage1->GetProSettings(name, path); // 第一页
     emit SigProSettings(name, path);
     QWizard::done(result);
 }

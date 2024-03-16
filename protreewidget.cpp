@@ -10,6 +10,7 @@
 #include "removeprodialog.h"
 #include "opentreethread.h"
 #include "slideshowdlg.h"
+#include "databasemanager.h"
 
 ProTreeWidget::ProTreeWidget(QWidget *parent): QTreeWidget(parent), _right_btn_item(nullptr), _active_item(nullptr),
     _selected_item(nullptr), _dialog_progress(nullptr), _open_progressdlg(nullptr),
@@ -29,6 +30,14 @@ ProTreeWidget::ProTreeWidget(QWidget *parent): QTreeWidget(parent), _right_btn_i
     connect(_action_slidshow, &QAction::triggered, this, &ProTreeWidget::SlotSlideShow);
 
     connect(this, &ProTreeWidget::itemDoubleClicked, this, &ProTreeWidget::SlotDoubleClickItem); //当前的根目录中的item被双击
+}
+
+void ProTreeWidget::OpenPro(const QString& path)
+{
+    _set_path.insert(path);
+    int file_count = 0;
+    _thread_open_pro = std::make_shared<OpenTreeThread>(path, file_count, this, nullptr);
+    _thread_open_pro->start();
 }
 
 void ProTreeWidget::AddProToTree(const QString &name, const QString &path)
@@ -57,7 +66,9 @@ void ProTreeWidget::AddProToTree(const QString &name, const QString &path)
     item->setData(0, Qt::DisplayRole, name);
     item->setData(0, Qt::DecorationRole, QIcon(":/icon/dir.png"));
     item->setData(0, Qt::ToolTipRole, file_path);
-    this->addTopLevelItem(item);
+    this->addTopLevelItem(item); //添加到目录树
+
+    DatabaseManager::setSettingValue(name, file_path);
 }
 
 void ProTreeWidget::SlotItemPressed(QTreeWidgetItem *item, int column)
@@ -119,8 +130,7 @@ void ProTreeWidget::SlotImport() // 导入
     QString import_path = fileNames.at(0);
     int file_count = 0;
 
-
-    //导入文件线程？
+    //导入文件线程
     _thread_create_pro = std::make_shared<ProTreeThread>(std::ref(import_path), std::ref(path), _right_btn_item,
                                                          file_count, this, _right_btn_item, nullptr);
 
@@ -242,14 +252,14 @@ void ProTreeWidget::SlotSlideShow()
         return;
     }
 
-    // qDebug()<< "last child item name is " << last_child_item->GetPath()<< endl;
+    qDebug()<< "last child item name is " << last_child_item->GetPath()<< Qt::endl;
 
     auto * first_child_item = right_pro_item->GetFirstPicChild();
     if(!first_child_item){
         return;
     }
 
-    // qDebug()<< "first child item name is " << first_child_item->GetPath()<< endl;
+    qDebug()<< "first child item name is " << first_child_item->GetPath()<< Qt::endl;
 
     _slide_show_dlg = std::make_shared<SlideShowDlg>(this, first_child_item, last_child_item);
     _slide_show_dlg->setModal(true);

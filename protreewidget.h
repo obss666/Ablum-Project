@@ -15,6 +15,7 @@ class ProTreeWidget : public QTreeWidget
     Q_OBJECT
 public:
     ProTreeWidget(QWidget *parent = nullptr);
+    void OpenPro(const QString& path);
     void AddProToTree(const QString &name, const QString &path);
 
 private:
@@ -31,6 +32,7 @@ private:
     std::shared_ptr<ProTreeThread> _thread_create_pro;
     std::shared_ptr<OpenTreeThread> _thread_open_pro;
     std::shared_ptr<SlideShowDlg> _slide_show_dlg;  //轮播图对话框
+
 
 public slots:
     void SlotOpenPro(const QString &path);

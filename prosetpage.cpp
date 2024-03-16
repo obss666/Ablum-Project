@@ -17,7 +17,7 @@ ProSetPage::ProSetPage(QWidget *parent)
 
     QString curPath = QDir::currentPath(); // 获取当前应用程序的工作目录。
     ui->lineEdit_2->setText(curPath);
-    ui->lineEdit_2->setCursorPosition(ui->lineEdit_2->text().size());
+    ui->lineEdit_2->setCursorPosition(ui->lineEdit_2->text().size()); //光标放到最后
 
     // 清除按钮
     ui->lineEdit->setClearButtonEnabled(true);
