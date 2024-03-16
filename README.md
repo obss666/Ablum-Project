@@ -1,7 +1,3 @@
-<div style="display: flex; justify-content: space-between;">
-    <strong style="margin-left: 0;">基于Qt实现的GUI电子相册 Ablum</strong> <span style="margin-left: auto;">2024-02 至 2024-03</span>
-</div>
-
 - 使用**信号槽机制**实现用户行为与应用的交互，包括打开项目，导入文件，删除文件，幻灯片播放等。
 - 通过**鼠标事件**实现了按钮样式的变化，为了避免资源浪费使用了**图像重绘**。
 - 实现了简单的项目目录树，支持导入文件操作，导入时加载一个新线程，递归处理创建逻辑，提高运行效率。
